@@ -32,7 +32,7 @@ embedding:
 # The API generates responses to evaluate
 api:
   enabled: true # Set to false for static data evaluation
-  api_base: "https://lightspeed-core-openshift-aladdin.apps.<your-cluster-domain>" # TODO: Replace with your cluster route
+  api_base: api_base: "https://lightspeed-core-openshift-aladdin.apps.<your-cluster-domain>" # Replace with your cluster route
   version: v1
   endpoint_type: streaming # Use "streaming" or "query"
   timeout: 300
@@ -44,7 +44,7 @@ api:
   system_prompt: null
 
   cache_dir: ".caches/api_cache"
-  cache_enabled: true
+  cache_enabled: false
 
 # Metrics configuration
 # These define the evaluation criteria and thresholds
