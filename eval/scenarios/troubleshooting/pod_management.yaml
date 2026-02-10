@@ -1,0 +1,46 @@
+# Pod Management & Listing Tests
+# Tests focused on listing and viewing pod information
+
+- conversation_group_id: pod_list_namespace
+  description: List pods in specific namespace with table output
+  tag: troubleshooting
+
+  conversation_metrics: []
+  conversation_metrics_metadata: {}
+
+  turns:
+    - turn_id: turn_1
+      query: "which pods are running in the openshift-aladdin namespace? create a table"
+      expected_response: |
+        I've created a table displaying the running pods in the `openshift-aladdin`
+        namespace. You can view it in the UI.
+      expected_tool_calls:
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: obs
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: kube
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: ngui
+        - - tool_name: pods_list_in_namespace
+            arguments:
+              namespace: openshift-aladdin
+              server_label: kube
+        - - tool_name: generate_ui_component
+            arguments:
+              user_prompt: which pods are running in the openshift-aladdin namespace.*
+              data: NAMESPACE.*
+              data_type: pods_list_in_namespace
+              server_label: ngui
+            result: \"component\":\"table\"
+      turn_metrics:
+        - ragas:response_relevancy
+        - custom:answer_correctness
+        - custom:tool_eval
+      turn_metrics_metadata:
+        custom:answer_correctness:
+          threshold: 0.7 # Override default threshold for this turn
+        ragas:response_relevancy:
+          threshold: 0.7 # Override default threshold (0.8) for this turn

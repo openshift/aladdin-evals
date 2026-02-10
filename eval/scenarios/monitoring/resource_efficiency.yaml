@@ -1,0 +1,161 @@
+# Resource Efficiency and Capacity Planning Tests
+# Tests focused on resource utilization, efficiency, and capacity planning
+
+- conversation_group_id: test_namespace_resource_consumption
+  description: Test namespace resource consumption
+  tag: capacity_planning
+
+  conversation_metrics: []
+  conversation_metrics_metadata: {}
+
+  turns:
+    - turn_id: turn_1
+      query: "which namespaces are consuming most resources?"
+      expected_response: |
+        Here are the namespaces with their CPU and memory consumption.
+      expected_tool_calls:
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: obs
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: kube
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: ngui
+        - - tool_name: namespaces_list
+            arguments:
+              server_label: kube
+        - - tool_name: pods_top
+            arguments:
+              all_namespaces: true
+              server_label: kube
+        - - tool_name: pods_top
+            arguments:
+              all_namespaces: false
+              namespace: default
+              server_label: kube
+        - - tool_name: pods_top
+            arguments:
+              all_namespaces: false
+              namespace: openshift-aladdin
+              server_label: kube
+        - - tool_name: pods_top
+            arguments:
+              all_namespaces: false
+              namespace: kube-system
+              server_label: kube
+        - - tool_name: pods_top
+            arguments:
+              all_namespaces: false
+              namespace: openshift
+              server_label: kube
+        - - tool_name: pods_top
+            arguments:
+              all_namespaces: false
+              namespace: kube-system
+              server_label: kube
+        - - tool_name: pods_top
+            arguments:
+              all_namespaces: false
+              namespace: openshift
+              server_label: kube
+        - - tool_name: pods_top
+            arguments:
+              all_namespaces: false
+              namespace: default
+              server_label: kube
+        - - tool_name: pods_top
+            arguments:
+              all_namespaces: false
+              namespace: openshift-monitoring
+              server_label: kube
+        - - tool_name: generate_ui_component
+            arguments:
+              user_prompt: which namespaces are consuming.*
+              data: ".*"
+              data_type: pods_top
+              server_label: ngui
+      turn_metrics:
+        - ragas:response_relevancy
+        - custom:answer_correctness
+        - custom:tool_eval
+
+- conversation_group_id: test_cluster_resource_check
+  description: Test cluster resource availability
+  tag: capacity_planning
+
+  conversation_metrics: []
+  conversation_metrics_metadata: {}
+
+  turns:
+    - turn_id: turn_1
+      query: "are we running out of resources?"
+      expected_response: |
+        Here is the cluster resource availability status showing CPU and memory capacity.
+      expected_tool_calls:
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: obs
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: kube
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: ngui
+        - - tool_name: nodes_top
+            arguments:
+              server_label: kube
+        - - tool_name: pods_top
+            arguments:
+              server_label: kube
+        - - tool_name: generate_ui_component
+            arguments:
+              user_prompt: are we running out of resources.*
+              data: ".*"
+              data_type: nodes_top
+              server_label: ngui
+      turn_metrics:
+        - ragas:response_relevancy
+        - custom:answer_correctness
+        - custom:tool_eval
+
+- conversation_group_id: test_resource_efficiency
+  description: Test resource efficiency analysis
+  tag: capacity_planning
+
+  conversation_metrics: []
+  conversation_metrics_metadata: {}
+
+  turns:
+    - turn_id: turn_1
+      query: "show me resource requests vs actual usage"
+      expected_response: |
+        Here is the comparison of resource requests versus actual usage across pods.
+      expected_tool_calls:
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: obs
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: kube
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: ngui
+        - - tool_name: pods_top
+            arguments:
+              all_namespaces: true
+              server_label: kube
+        - - tool_name: pods_list
+            arguments:
+              server_label: kube
+        - - tool_name: generate_ui_component
+            arguments:
+              data: ".*"
+              data_type: pods_top
+              data_id: null
+              server_label: ngui
+      turn_metrics:
+        - ragas:response_relevancy
+        - custom:answer_correctness
+        - custom:tool_eval

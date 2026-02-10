@@ -18,7 +18,7 @@ llm:
   timeout: 300
   num_retries: 3
   cache_dir: ".caches/llm_cache"
-  cache_enabled: true
+  cache_enabled: false
 
 # Embedding configuration (for semantic similarity metrics)
 embedding:
@@ -26,7 +26,7 @@ embedding:
   model: "text-embedding-3-small"
   provider_kwargs: {}
   cache_dir: ".caches/embedding_cache"
-  cache_enabled: true
+  cache_enabled: false
 
 # API Configuration - connects to your Aladdin endpoint
 # The API generates responses to evaluate

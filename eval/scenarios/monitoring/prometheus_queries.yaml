@@ -1,0 +1,32 @@
+# Prometheus Metrics Discovery Tests
+# Tests focused on Prometheus metrics discovery and querying
+
+- conversation_group_id: test_prometheus_discovery
+  description: Test Prometheus metrics discovery
+  tag: monitoring
+
+  conversation_metrics: []
+  conversation_metrics_metadata: {}
+
+  turns:
+    - turn_id: turn_1
+      query: "what prometheus data can you show me?"
+      expected_response: |
+        Here are the available Prometheus metrics including node metrics, pod metrics, and container metrics.
+      expected_tool_calls:
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: obs
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: kube
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: ngui
+        - - tool_name: list_metrics
+            arguments:
+              server_label: obs
+      turn_metrics:
+        - ragas:response_relevancy
+        - custom:answer_correctness
+        - custom:tool_eval
