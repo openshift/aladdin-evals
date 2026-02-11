@@ -1,0 +1,222 @@
+# CPU and Memory Monitoring Tests
+# Tests focused on CPU and memory resource monitoring
+
+- conversation_group_id: test_cluster_cpu_usage
+  description: Test querying cluster CPU usage
+  tag: monitoring
+
+  conversation_metrics: []
+  conversation_metrics_metadata: {}
+
+  turns:
+    - turn_id: turn_1
+      query: "show me cpu usage of my cluster in table"
+      expected_response: |
+        Here is the CPU usage of your cluster showing node CPU usage 
+        and pod CPU usage with metrics.
+      expected_tool_calls:
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: obs
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: kube
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: ngui
+        - - tool_name: nodes_top
+            arguments:
+              server_label: kube
+        - - tool_name: generate_ui_component
+            arguments:
+              user_prompt: show me cpu usage.*
+              data: ".*"
+              data_type: nodes_top
+              server_label: ngui
+      turn_metrics:
+        - ragas:response_relevancy
+        - custom:answer_correctness
+        - custom:tool_eval
+
+- conversation_group_id: test_memory_usage_nodes
+  description: Test querying node memory usage
+  tag: monitoring
+
+  conversation_metrics: []
+  conversation_metrics_metadata: {}
+
+  turns:
+    - turn_id: turn_1
+      query: "show me memory usage for nodes"
+      expected_response: |
+        Here is the memory usage for cluster nodes with available and used memory.
+      expected_tool_calls:
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: obs
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: kube
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: ngui
+        - - tool_name: nodes_top
+            arguments:
+              server_label: kube
+        - - tool_name: generate_ui_component
+            arguments:
+              user_prompt: show me memory usage.*
+              data: ".*"
+              data_type: nodes_top
+              server_label: ngui
+      turn_metrics:
+        - ragas:response_relevancy
+        - custom:answer_correctness
+        - custom:tool_eval
+
+- conversation_group_id: test_pods_high_cpu
+  description: Test identifying pods with highest CPU usage
+  tag: monitoring
+
+  conversation_metrics: []
+  conversation_metrics_metadata: {}
+
+  turns:
+    - turn_id: turn_1
+      query: "which pods are using the most CPU?"
+      expected_response: |
+        Here are the pods with highest CPU usage across namespaces.
+      expected_tool_calls:
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: obs
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: kube
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: ngui
+        - - tool_name: pods_top
+            arguments:
+              all_namespaces: true
+              server_label: kube
+        - - tool_name: generate_ui_component
+            arguments:
+              user_prompt: which pods are using the most CPU.*
+              data: ".*"
+              data_type: pods_top
+              server_label: ngui
+      turn_metrics:
+        - ragas:response_relevancy
+        - custom:answer_correctness
+        - custom:tool_eval
+
+- conversation_group_id: test_pods_high_memory
+  description: Test identifying pods with highest memory usage
+  tag: monitoring
+
+  conversation_metrics: []
+  conversation_metrics_metadata: {}
+
+  turns:
+    - turn_id: turn_1
+      query: "which pods are using the most memory?"
+      expected_response: |
+        Here are the pods with highest memory usage.
+      expected_tool_calls:
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: obs
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: kube
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: ngui
+        - - tool_name: pods_top
+            arguments:
+              all_namespaces: true
+              server_label: kube
+        - - tool_name: generate_ui_component
+            arguments:
+              user_prompt: which pods are using the most memory.*
+              data: ".*"
+              data_type: pods_top
+              server_label: ngui
+      turn_metrics:
+        - ragas:response_relevancy
+        - custom:answer_correctness
+        - custom:tool_eval
+
+- conversation_group_id: test_pod_metrics_namespace
+  description: Test pod metrics for specific namespace
+  tag: monitoring
+
+  conversation_metrics: []
+  conversation_metrics_metadata: {}
+
+  turns:
+    - turn_id: turn_1
+      query: "show me pod metrics in openshift-aladdin namespace"
+      expected_response: |
+        Here are the pod metrics for openshift-aladdin namespace.
+      expected_tool_calls:
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: obs
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: kube
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: ngui
+        - - tool_name: pods_top
+            arguments:
+              namespace: openshift-aladdin
+              server_label: kube
+        - - tool_name: generate_ui_component
+            arguments:
+              user_prompt: show me pod metrics.*
+              data: ".*"
+              data_type: pods_top
+              server_label: ngui
+      turn_metrics:
+        - ragas:response_relevancy
+        - custom:answer_correctness
+        - custom:tool_eval
+
+- conversation_group_id: test_node_resource_usage
+  description: Test node resource usage display
+  tag: monitoring
+
+  conversation_metrics: []
+  conversation_metrics_metadata: {}
+
+  turns:
+    - turn_id: turn_1
+      query: "display node resource usage"
+      expected_response: |
+        Here is the resource usage for each node showing CPU and memory utilization.
+      expected_tool_calls:
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: obs
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: kube
+        - - tool_name: mcp_list_tools
+            arguments:
+              server_label: ngui
+        - - tool_name: nodes_top
+            arguments:
+              server_label: kube
+        - - tool_name: generate_ui_component
+            arguments:
+              user_prompt: display node resource usage.*
+              data: ".*"
+              data_type: nodes_top
+              server_label: ngui
+      turn_metrics:
+        - ragas:response_relevancy
+        - custom:answer_correctness
+        - custom:tool_eval
