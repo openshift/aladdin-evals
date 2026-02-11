@@ -18,7 +18,7 @@ llm:
   timeout: 300
   num_retries: 3
   cache_dir: ".caches/llm_cache"
-  cache_enabled: false
+  cache_enabled: true
 
 # Embedding configuration (for semantic similarity metrics)
 embedding:
@@ -26,13 +26,13 @@ embedding:
   model: "text-embedding-3-small"
   provider_kwargs: {}
   cache_dir: ".caches/embedding_cache"
-  cache_enabled: false
+  cache_enabled: true
 
 # API Configuration - connects to your Aladdin endpoint
 # The API generates responses to evaluate
 api:
   enabled: true # Set to false for static data evaluation
-  api_base: api_base: "https://lightspeed-core-openshift-aladdin.apps.<your-cluster-domain>" # Replace with your cluster route
+  api_base: "https://lightspeed-core-openshift-aladdin.apps.<your-cluster-domain>" # Replace with your cluster route
   version: v1
   endpoint_type: streaming # Use "streaming" or "query"
   timeout: 300

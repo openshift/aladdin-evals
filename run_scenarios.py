@@ -59,13 +59,14 @@ def print_info(text):
     print(f"{Colors.OKCYAN}{text}{Colors.ENDC}")
 
 
-def run_scenario(scenario_file, system_config, output_base):
+def run_scenario(scenario_file, system_config, output_base, lightspeed_dir=None):
     """Run a single scenario evaluation.
     
     Args:
         scenario_file: Path to the scenario YAML file
         system_config: Path to system configuration file
         output_base: Base directory for outputs
+        lightspeed_dir: Path to lightspeed-evaluation directory (optional, auto-detect if None)
         
     Returns:
         dict: Results including scenario name, success status, and output directory
@@ -99,13 +100,18 @@ def run_scenario(scenario_file, system_config, output_base):
     print_info(f"Output: {display_output}\n")
     
     # Find lightspeed-evaluation directory
-    lightspeed_dir = Path.cwd().parent / "lightspeed-evaluation"
-    if not lightspeed_dir.exists():
-        lightspeed_dir = Path.home() / "Documents" / "lightspeed-evaluation"
+    if lightspeed_dir is None:
+        # Auto-detect
+        lightspeed_dir = Path.cwd().parent / "lightspeed-evaluation"
+        if not lightspeed_dir.exists():
+            lightspeed_dir = Path.home() / "Documents" / "lightspeed-evaluation"
+    else:
+        lightspeed_dir = Path(lightspeed_dir)
     
     if not lightspeed_dir.exists():
         print_error(f"lightspeed-evaluation directory not found!")
-        print_info("Expected at: ../lightspeed-evaluation or ~/Documents/lightspeed-evaluation")
+        print_info(f"Searched: {lightspeed_dir}")
+        print_info("Use --lightspeed-dir to specify a custom path or ensure it exists at ../lightspeed-evaluation or ~/Documents/lightspeed-evaluation")
         return {
             "scenario": scenario_file.name,
             "category": category,
@@ -352,6 +358,9 @@ Examples:
   
   # Run with custom config
   python3 run_scenarios.py --system-config eval/system.yaml.local
+  
+  # Run with custom lightspeed-evaluation path
+  python3 run_scenarios.py --lightspeed-dir /path/to/lightspeed-evaluation
         """
     )
     
@@ -374,6 +383,11 @@ Examples:
         "--output-dir",
         default="eval/output",
         help="Base output directory (default: eval/output)"
+    )
+    parser.add_argument(
+        "--lightspeed-dir",
+        default=None,
+        help="Path to lightspeed-evaluation directory (default: auto-detect from ../lightspeed-evaluation or ~/Documents/lightspeed-evaluation)"
     )
     parser.add_argument(
         "--list",
@@ -457,7 +471,7 @@ Examples:
     results = []
     for idx, scenario_file in enumerate(scenario_files, 1):
         print(f"\n{Colors.BOLD}[{idx}/{len(scenario_files)}]{Colors.ENDC}")
-        result = run_scenario(scenario_file, system_config, output_base)
+        result = run_scenario(scenario_file, system_config, output_base, args.lightspeed_dir)
         results.append(result)
     
     # Summary

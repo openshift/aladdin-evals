@@ -110,10 +110,6 @@ oc get route lightspeed-core -n openshift-aladdin
 
 If you have not done so previously, clone the lightspeed-eval repo: https://github.com/lightspeed-core/lightspeed-evaluation
 
-**Note:** As of this writing the current version of the eval tool does not parse tool_calls from the latest LCORE version correctly. This PR addresses the issue: lightspeed-core/lightspeed-evaluation#150, so if you want to see tool_call data, you need to pick up that patch in your local lightspeed-evaluation repo.
-
-**Note2:** As of this writing the current version of the eval tool does not have the ability to evaluate tool_call responses. This PR proposes an implementation to address the issue: lightspeed-core/lightspeed-evaluation#151
-
 #### Run a single scenario
 
 From the lightspeed-evaluation repository root:
@@ -177,6 +173,9 @@ python3 run_scenarios.py --category monitoring
 
 # Run specific scenario
 python3 run_scenarios.py --scenario cpu_memory.yaml
+
+# Custom lightspeed-evaluation path
+python3 run_scenarios.py --lightspeed-dir /path/to/lightspeed-evaluation
 ```
 
 ### Output Reports
